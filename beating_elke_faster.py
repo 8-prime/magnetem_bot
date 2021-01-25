@@ -3,6 +3,7 @@ import sys
 import d3dshot
 import numpy as np
 from datetime import datetime
+from time import sleep
 
 
 #dis be the mofo that will do the screenshotting via d.screenshot()
@@ -37,8 +38,7 @@ state = 0
 # right end of right 1360
 
 
-def set_state_and_color(im_arr, state, time):
-    time = datetime.now()
+def set_state_and_color(im_arr, state):
     #col left red 1 blue 0
     c_left = -1
     #col left red 1 blue 0
@@ -67,47 +67,70 @@ def set_state_and_color(im_arr, state, time):
 
     if c_left == -1 and c_right == 0:
         pyautogui.moveTo(left)
+        pyautogui.mouseDown()
+        sleep(0.8)
+        pyautogui.mouseUp()
 
     if c_left == -1 and c_right == 1:
         pyautogui.moveTo(right)
+        pyautogui.mouseDown()
+        sleep(0.8)
+        pyautogui.mouseUp()
 
     if c_left == 0 and c_right == -1:
         pyautogui.moveTo(left)
+        pyautogui.mouseDown()
+        sleep(0.8)
+        pyautogui.mouseUp()
 
     if c_left == 1 and c_right == -1:
         pyautogui.moveTo(right)
+        pyautogui.mouseDown()
+        sleep(0.8)
+        pyautogui.mouseUp()
 
     if c_left == c_right and c_left == 0:
         #mouse to left
         pyautogui.moveTo(left)
+        pyautogui.mouseDown()
+        sleep(0.8)
+        pyautogui.mouseUp()
+
     if c_left == c_right and c_left == 1:
         #moues to right
         pyautogui.moveTo(right)
+        pyautogui.mouseDown()
+        sleep(0.8)
+        pyautogui.mouseUp()
     
     if c_left == 0 and c_right == 1:
         if state == 1:
             pyautogui.mouseUp()
-            pyautogui.click(center)
+            pyautogui.moveTo(center)
+            pyautogui.mouseDown()
+            sleep(0.04)
+            pyautogui.mouseUp()
             pyautogui.moveRel(0,-300)
             state = 0
     
     if c_right == 0 and c_left == 1:
         if state == 0:
             pyautogui.mouseUp()
-            pyautogui.click(center)
+            pyautogui.moveTo(center)
+            pyautogui.mouseDown()
+            sleep(0.01)
+            pyautogui.mouseUp()
             pyautogui.moveRel(0,-300)
             state = 1
 
 
-start = datetime.now().timestamp() * 1000
 
 
 try:
     while(True):
         pyautogui.mouseUp()
-        if((datetime.now().timestamp() * 1000) - start > 5):
-            image = d.screenshot()
-            set_state_and_color(image,state,start)
+        image = d.screenshot()
+        set_state_and_color(image,state)
         pyautogui.mouseDown()
         #keep mouse pressed
 except KeyboardInterrupt:
