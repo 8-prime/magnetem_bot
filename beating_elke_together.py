@@ -48,18 +48,22 @@ while(True):
     #loop trough small areas to check for non black/grey pixels
     #left
     for i in range(980,1100):
-        if image[y,i][2] > 240 and image[y,i][0] < 100:
+        blue = image[y,i][2]
+        red = image[y,i][0]
+        if blue > 240 and red < 100:
             c_left = 0
             break;
-        if image[y,i][0] > 150 and image[y,i][2] < 50:
+        if red > 150 and blue < 50:
             c_left = 1
             break;
     #right
     for i in range(1460,1580):
-        if image[y,i][2] > 240 and image[y,i][0] < 100:
+        blue = image[y,i][2]
+        red = image[y,i][0]
+        if blue > 240 and red < 100:
             c_right = 0
             break;
-        if image[y,i][0] > 150 and image[y,i][2] < 50:
+        if red > 150 and blue < 50:
             c_right = 1
             break;
 
@@ -67,22 +71,18 @@ while(True):
         continue
     else:
         pyautogui.mouseUp()
-        sleep(0.01)
         #only blue
-        if c_left == 0 and c_right == -1 or c_left == -1 and c_right == 0 or c_left == 0 and c_right == 0:
+        if c_left != 1 and c_right != 1:
             pyautogui.moveTo(left)
-            sleep(0.01)
             pyautogui.mouseDown()
         #only red
-        if c_left == 1 and c_right == -1 or c_left == -1 and c_right == 1 or c_left == 1 and c_right == 1:
+        if c_left != 0 and c_right != 0:
             pyautogui.moveTo(right)
-            sleep(0.01)
             pyautogui.mouseDown()
 
         #blue from left red from right and state is not 0
         if c_left == 0 and c_right == 1 and state == 1:
             pyautogui.moveTo(center)
-            sleep(0.01)
             pyautogui.mouseDown()
             sleep(0.1)
             pyautogui.mouseUp()
@@ -90,7 +90,6 @@ while(True):
         #blue from right and red from left and state is not 1
         if c_left == 1 and c_right == 0 and state == 0:
             pyautogui.moveTo(center)
-            sleep(0.01)
             pyautogui.mouseDown()
             sleep(0.1)
             pyautogui.mouseUp()
