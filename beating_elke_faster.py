@@ -1,12 +1,13 @@
-from datetime import datetime
 import pyautogui
-from pynput import keyboard
 import sys
+import d3dshot
+import numpy as np
+from datetime import datetime
 
 
-pyautogui.screenshot(region=(977,47,1584,1393), 'screen.png')
+#dis be the mofo that will do the screenshotting via d.screenshot()
+d = d3dshot.create(capture_output="numpy")
 
-"""
 
 #center button to switch sides 1280,1220
 #left button 1080, 1220
@@ -18,15 +19,15 @@ right = (1480,1220)
 #state 0 blue left red right
 state = 0
 
-#left first bound
-l1 = 2049000
-#left second bound
-l2 =2049200
+#left balls coming in at 
+#x=990 y = 800
+#eft stop coming in at
+#x=1230
 
-#right first bound
-r1 = 2049380
-#right second bound
-r2 = 2049560
+#right balls stop coming in at
+#x=1340
+#right start coming in at 
+#x=1580 y = 800
 
 #height for pixels in the middle
 
@@ -36,35 +37,33 @@ r2 = 2049560
 # right end of right 1360
 
 
-def on_press(key):
-    sys.exit()
-
-def on_release(key):
-    sys.exit()
-
-def set_state_and_color(px_list, state, time):
+def set_state_and_color(im_arr, state, time):
     time = datetime.now()
     #col left red 1 blue 0
     c_left = -1
     #col left red 1 blue 0
     c_right = -1
 
-    #check color left
-    for i in range(l1,l2):
-        if px_list[i][0] > 200 and px_list[i][2] < 200:
-            #left is red
+    #lookup y cooridante is constant
+    y = 800
+
+    #check for left
+    for i in range (990,1230):
+        if(im_arr[y,i][0] > 200 and im_arr[y,i][2] < 200):
             c_left = 1
-        elif px_list[i][0] < 200 and px_list[i][2] > 200:
-            #left is blue
+            break
+        if(im_arr[y,i][2] > 200 and im_arr[y,i][0] < 200):
             c_left = 0
-    #check for color on right and left
-    for i in range(r1,r2):
-        if px_list[i][0] > 200 and px_list[i][2] < 200:
-            #right is red
+            break
+
+    for i in range (1340,1580):
+        if(im_arr[y,i][0] > 200 and im_arr[y,i][2] < 200):
             c_right = 1
-        elif px_list[i][0] < 200 and px_list[i][2] > 200:
-            #righ is blue
+            break
+        if(im_arr[y,i][2] > 200 and im_arr[y,i][0] < 200):
             c_right = 0
+            break
+
 
     if c_left == -1 and c_right == 0:
         pyautogui.moveTo(left)
@@ -102,20 +101,16 @@ def set_state_and_color(px_list, state, time):
 
 start = datetime.now().timestamp() * 1000
 
-#keylistener
-listener = keyboard.Listener(
-    on_press=on_press,
-    on_release=on_release)
-listener.start()
+
+try:
+    while(True):
+        pyautogui.mouseUp()
+        if((datetime.now().timestamp() * 1000) - start > 5):
+            image = d.screenshot()
+            set_state_and_color(image,state,start)
+        pyautogui.mouseDown()
+        #keep mouse pressed
+except KeyboardInterrupt:
+    sys.exit()
 
 
-while(True):
-    if((datetime.now().timestamp() * 1000) - start > 5):
-        image = pyautogui.screenshot()
-        pixel_val = list(image.getdata())
-        set_state_and_color(pixel_val,state,start)
-    pyautogui.mouseDown()
-    #keep mouse pressed
-
-
-"""
