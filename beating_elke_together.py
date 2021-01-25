@@ -47,36 +47,36 @@ while(True):
     c_right = -1
     #loop trough small areas to check for non black/grey pixels
     #left
-    for i in range(980,1100):
+    for i in range(980,990):
         blue = image[y,i][2]
         red = image[y,i][0]
-        if blue > 240 and red < 100:
+        if blue > red and blue >= 160:
             c_left = 0
             break;
-        if red > 150 and blue < 50:
+        elif red > blue and red >= 39:
             c_left = 1
             break;
     #right
-    for i in range(1460,1580):
+    for i in range(1570,1580):
         blue = image[y,i][2]
         red = image[y,i][0]
-        if blue > 240 and red < 100:
+        if blue > red and blue >= 160:
             c_right = 0
             break;
-        if red > 150 and blue < 50:
+        elif red > blue and red >= 39:
             c_right = 1
             break;
 
-    if c_left == -1 and c_right == -1 or c_left == c_left_prev and c_right == c_left_prev:
+    if c_left == -1 and c_right == -1: # or c_left == c_left_prev and c_right == c_left_prev:
         continue
     else:
         pyautogui.mouseUp()
         #only blue
-        if c_left != 1 and c_right != 1:
+        if (c_left == 0 and c_right == -1) or (c_left == -1 and c_right == 0) or (c_left == 0 and c_right == 0):
             pyautogui.moveTo(left)
             pyautogui.mouseDown()
         #only red
-        if c_left != 0 and c_right != 0:
+        if (c_left == 1 and c_right == -1) or (c_left == -1 and c_right == 1) or (c_left == 1 and c_right == 1):
             pyautogui.moveTo(right)
             pyautogui.mouseDown()
 
